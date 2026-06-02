@@ -1,0 +1,24 @@
+# GIS Camera Monitoring Dashboard - Cursor Rules
+
+You are an expert AI assistant specialized in React 19, TypeScript, MapLibre GL, and TailwindCSS v4. When working on this repository, you MUST follow these guidelines:
+
+## 1. Project Reference Files
+Always refer to the project rule files for detailed standards before writing any code, planning changes, or writing tests:
+- **Root Rules Index:** [RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/RULES.md)
+- **PM Rules:** [PM_RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/docs/rules/PM_RULES.md)
+- **BA Rules:** [BA_RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/docs/rules/BA_RULES.md)
+- **Test Rules:** [TEST_RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/docs/rules/TEST_RULES.md)
+- **Coding Rules:** [CODING_RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/docs/rules/CODING_RULES.md)
+
+## 2. Key Code Standards (Summary)
+- **Tech Stack:** React 19, TypeScript (strict mode), MapLibre GL, TailwindCSS v4.
+- **Naming Conventions:** Kebab-case folders, PascalCase components, camelCase variables & helper functions.
+- **TypeScript:** Strict type-safety. Never use `any`. Use `interface` for entity structures, `type` for unions/aliases.
+- **React Performance:** Memoize heavy map components using `React.memo`, utilize `useMemo` and `useCallback` to avoid unnecessary re-renders. Always cleanup event listeners on map unmount.
+- **Styling:** Use TailwindCSS v4 utility classes. Manage dynamic styles using `cn(...)` wrapper (`clsx` + `tailwind-merge`).
+- **Git Commit Standard:** Use Conventional Commits (`feat(scope): ...`, `fix(scope): ...`).
+
+## 3. Testing Requirements
+- Unit/Integration test coverage target: **≥ 80%** (via Vitest + React Testing Library).
+- Mock maplibre-gl in tests properly (see [TEST_RULES.md](file:///Users/hienhao/Code/Home/Project/camera-map-demo/docs/rules/TEST_RULES.md#31-unit-testing) for setup examples).
+- Do not skip tests for helper functions or key components.
