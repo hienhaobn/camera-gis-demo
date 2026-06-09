@@ -18,12 +18,14 @@
     "@turf/turf": "^7.3.5",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "hls.js": "^1.6.16",
     "lucide-react": "^1.17.0",
     "maplibre-gl": "^5.24.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-map-gl": "^8.1.1",
+    "react-router-dom": "^7.16.0",
     "shadcn": "^4.10.0",
     "supercluster": "^8.0.1",
     "tailwind-merge": "^3.6.0",
@@ -51,5 +53,6 @@
     "typescript-eslint": "^8.59.2",
     "vite": "^8.0.12",
     "vitest": "^4.1.8"
-  }
+  },
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }

@@ -86,7 +86,7 @@ export const useMapStore = create<MapState>((set) => ({
   selectedCamera: null,
   setSelectedCamera: (camera) => set({ selectedCamera: camera, bottomSheetOpen: camera !== null }),
 
-  theme: 'dark',
+  theme: 'light',
   toggleTheme: () => set((state) => {
     const nextTheme = state.theme === 'dark' ? 'light' : 'dark'
     if (typeof document !== 'undefined') {

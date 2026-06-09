@@ -18,6 +18,7 @@ export interface Camera {
   lastSeen: string;
   resolution: '4K' | '2K' | '1080p';
   area: string;
+  streamUrl?: string;
 }
 
 const zonesInfo = [
@@ -77,6 +78,17 @@ zonesInfo.forEach(zone => {
     const date = new Date(Date.now() - (hoursAgo * 60 + minsAgo) * 60000);
     const lastSeen = date.toISOString();
 
+    // Setup public stream URLs for online cameras (both MP4 loops and HLS .m3u8 streams)
+    const publicStreams = [
+      'https://assets.mixkit.co/videos/preview/mixkit-traffic-in-a-large-city-street-during-the-day-34351-large.mp4',
+      'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      'https://assets.mixkit.co/videos/preview/mixkit-night-traffic-in-a-modern-city-43063-large.mp4',
+      'https://ntv1.akamaized.net/hls/live/2014075/NASA-NTV1-HLS/master.m3u8',
+      'https://assets.mixkit.co/videos/preview/mixkit-subway-train-arriving-at-the-station-43093-large.mp4',
+      'https://assets.mixkit.co/videos/preview/mixkit-security-camera-footage-of-a-street-at-night-42289-large.mp4',
+    ];
+    const streamUrl = status === 'online' ? publicStreams[camIndex % publicStreams.length] : undefined;
+
     cameras.push({
       id,
       name,
@@ -87,7 +99,8 @@ zonesInfo.forEach(zone => {
       type,
       lastSeen,
       resolution,
-      area: `${street}, Q. ${zone.name}, Đà Nẵng`
+      area: `${street}, Q. ${zone.name}, Đà Nẵng`,
+      streamUrl,
     });
 
     camIndex++;
@@ -105,3 +118,7 @@ export const camerasGeoJSON = {
     }
   }))
 };
+
+export function generateInitialCameras(): Camera[] {
+  return cameras.map(cam => ({ ...cam }));
+}

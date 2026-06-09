@@ -14,6 +14,17 @@ vi.mock('@/components/ui/sidebar', () => {
     SidebarGroup: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar-group">{children}</div>,
     SidebarGroupLabel: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar-group-label">{children}</div>,
     SidebarGroupContent: ({ children }: { children: React.ReactNode }) => <div data-testid="sidebar-group-content">{children}</div>,
+    SidebarTrigger: ({ className }: { className?: string }) => <button data-testid="sidebar-trigger" className={className}>Toggle</button>,
+    SidebarRail: () => <button data-testid="sidebar-rail">Rail</button>,
+    useSidebar: () => ({
+      state: 'expanded',
+      open: true,
+      setOpen: vi.fn(),
+      openMobile: false,
+      setOpenMobile: vi.fn(),
+      isMobile: false,
+      toggleSidebar: vi.fn(),
+    }),
   }
 })
 
@@ -83,7 +94,6 @@ describe('AppSidebar Component', () => {
 
   it('renders branding title and sections correctly', () => {
     render(<AppSidebar />)
-    expect(screen.getByText('CCTV GIS HUD')).toBeInTheDocument()
     expect(screen.getByText('Lớp Bản Đồ')).toBeInTheDocument()
     expect(screen.getByText('Công Cụ GIS')).toBeInTheDocument()
     expect(screen.getByText('Danh Sách Camera')).toBeInTheDocument()

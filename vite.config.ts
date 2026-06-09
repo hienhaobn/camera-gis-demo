@@ -12,6 +12,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ["sin-ripe-reputation-salad.trycloudflare.com"],
+    allowedHosts: ["serving-starting-packets-lil.trycloudflare.com"],
   },
 });

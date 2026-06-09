@@ -1,6 +1,7 @@
 import React from 'react'
 import { render, screen, fireEvent, act } from '@testing-library/react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
+import { MemoryRouter } from 'react-router-dom'
 import { Header } from '../components/layout/Header'
 import { SidebarProvider } from '@/components/ui/sidebar'
 import { useMapStore } from '../stores/useMapStore'
@@ -35,12 +36,18 @@ describe('Header Component', () => {
     vi.useFakeTimers()
   })
 
-  it('renders correctly with title and active clock', () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
+  const renderHeader = () => {
+    return render(
+      <MemoryRouter>
+        <SidebarProvider>
+          <Header />
+        </SidebarProvider>
+      </MemoryRouter>
     )
+  }
+
+  it('renders correctly with title and active clock', () => {
+    renderHeader()
 
     // Verify HUD title
     expect(screen.getByText('GIS SURVEILLANCE')).toBeInTheDocument()
@@ -54,11 +61,7 @@ describe('Header Component', () => {
   })
 
   it('renders camera stats status badges correctly', () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     // Online / Offline / Maintenance stats badge checks
     expect(screen.getByText('TỔNG:')).toBeInTheDocument()
@@ -68,11 +71,7 @@ describe('Header Component', () => {
   })
 
   it('toggles bell dropdown on notification button click', () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     const bellBtn = screen.getByTestId('alarm-bell')
     expect(bellBtn).toBeInTheDocument()
@@ -82,11 +81,7 @@ describe('Header Component', () => {
   })
 
   it('updates status filter in store when clicking stats badges', () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     const totalBtn = screen.getByText('TỔNG:').closest('button')
     const onlineBtn = screen.getByText('ONLINE:').closest('button')
@@ -117,11 +112,7 @@ describe('Header Component', () => {
   })
 
   it('toggles fullscreen state when fullscreen button is clicked', async () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     const fsBtn = screen.getByTestId('fullscreen-toggle')
     expect(fsBtn).toBeInTheDocument()
@@ -135,39 +126,31 @@ describe('Header Component', () => {
   })
 
   it('toggles theme when theme button is clicked', () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     const themeBtn = screen.getByTestId('theme-toggle')
     expect(themeBtn).toBeInTheDocument()
 
-    // Default theme should be dark
-    expect(useMapStore.getState().theme).toBe('dark')
-
-    act(() => {
-      fireEvent.click(themeBtn)
-    })
-
-    // Theme should switch to light
+    // Default theme should be light
     expect(useMapStore.getState().theme).toBe('light')
 
     act(() => {
       fireEvent.click(themeBtn)
     })
 
-    // Theme should switch back to dark
+    // Theme should switch to dark
     expect(useMapStore.getState().theme).toBe('dark')
+
+    act(() => {
+      fireEvent.click(themeBtn)
+    })
+
+    // Theme should switch back to light
+    expect(useMapStore.getState().theme).toBe('light')
   })
 
   it('handles alarm item click and clears all alarms', async () => {
-    render(
-      <SidebarProvider>
-        <Header />
-      </SidebarProvider>
-    )
+    renderHeader()
 
     // Check if dropdown items are rendered.
     const alarmItem = screen.getByText('Phát hiện xâm nhập')
