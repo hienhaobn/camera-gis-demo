@@ -21,7 +21,6 @@ import {
   MapPin,
   Navigation,
   Search,
-  Check,
   Eye,
   EyeOff,
   ShieldCheck,
@@ -46,8 +45,6 @@ export function AppSidebar() {
     setSelectedCamera,
     visibleLayers,
     toggleLayer,
-    isSatellite,
-    setIsSatellite,
     searchQuery,
     setSearchQuery,
     statusFilter,
@@ -100,25 +97,21 @@ export function AppSidebar() {
         <SidebarContent className="gap-0 py-4 flex flex-col items-center select-none overflow-y-auto no-scrollbar">
           {/* Layer toggles */}
           <div className="flex flex-col items-center gap-4 py-2 w-full">
-            {/* satellite toggle */}
+            {/* satellite toggle (Vô hiệu hóa vì chưa có bản quyền/funding) */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <Toggle
-                  pressed={isSatellite}
-                  onPressedChange={setIsSatellite}
+                  disabled
+                  pressed={false}
                   size="sm"
                   aria-label="Toggle Satellite Style"
-                  className={`h-8 w-8 p-0 flex items-center justify-center border border-border/40 hover:bg-muted cursor-pointer transition-all rounded-md ${
-                    isSatellite
-                      ? "bg-primary/20 text-primary border-primary/40 glow-cyan"
-                      : "bg-muted/20"
-                  }`}
+                  className="h-8 w-8 p-0 flex items-center justify-center border border-border/40 bg-muted/20 text-muted-foreground opacity-50 cursor-not-allowed rounded-md"
                 >
                   <Globe className="w-4 h-4" />
                 </Toggle>
               </TooltipTrigger>
               <TooltipContent side="right" sideOffset={10}>
-                Bản đồ vệ tinh
+                Bản đồ vệ tinh (Chưa kích hoạt)
               </TooltipContent>
             </Tooltip>
 
@@ -350,23 +343,19 @@ export function AppSidebar() {
             Lớp Bản Đồ
           </SidebarGroupLabel>
           <SidebarGroupContent className="pt-1.5 flex flex-col gap-2">
-            {/* Map Theme Toggle */}
-            <div className="flex items-center justify-between px-2 py-1 bg-muted/20 border border-border/30 rounded-md">
-              <span className="text-xs font-medium text-foreground">
-                Bản đồ vệ tinh
+            {/* Map Theme Toggle (Vô hiệu hóa vì chưa có bản quyền/funding) */}
+            <div className="flex items-center justify-between px-2 py-1 bg-muted/10 border border-border/20 rounded-md opacity-60">
+              <span className="text-xs font-medium text-muted-foreground">
+                Bản đồ vệ tinh (Chưa kích hoạt)
               </span>
               <Toggle
-                pressed={isSatellite}
-                onPressedChange={setIsSatellite}
+                disabled
+                pressed={false}
                 size="sm"
                 aria-label="Toggle Satellite Style"
-                className="h-7 w-12 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground border border-border/40 hover:bg-muted cursor-pointer"
+                className="h-7 w-12 border border-border/40 cursor-not-allowed opacity-50"
               >
-                {isSatellite ? (
-                  <Check className="w-3.5 h-3.5" />
-                ) : (
-                  <EyeOff className="w-3.5 h-3.5" />
-                )}
+                <EyeOff className="w-3.5 h-3.5" />
               </Toggle>
             </div>
 

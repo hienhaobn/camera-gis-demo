@@ -41,7 +41,10 @@ vi.mock('maplibre-gl', () => {
     Popup: PopupMock,
     NavigationControl: vi.fn(),
     ScaleControl: vi.fn(),
-    default: {},
+    addProtocol: vi.fn(),
+    default: {
+      addProtocol: vi.fn(),
+    },
   }
 })
 
@@ -114,3 +117,18 @@ Object.defineProperty(window, 'matchMedia', {
     dispatchEvent: vi.fn(),
   })),
 })
+
+// Mock mapConfig helper functions for offline map tests
+vi.mock('@/lib/mapConfig', () => ({
+  registerPMTilesProtocol: vi.fn(),
+  fetchAndResolveStyle: vi.fn().mockResolvedValue({
+    version: 8,
+    sources: {},
+    layers: [],
+  }),
+  MAP_STYLES: {
+    light: '/map/styles/positron.json',
+    dark: '/map/styles/dark.json',
+  },
+}))
+

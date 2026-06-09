@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/select";
 
 import { useMapStore } from "@/stores/useMapStore";
+import { registerPMTilesProtocol, fetchAndResolveStyle } from "@/lib/mapConfig";
 import type { CustomDrawing } from "@/stores/useMapStore";
 import type { MapRef, MapLayerMouseEvent } from "react-map-gl/maplibre";
 
@@ -40,7 +41,6 @@ export function MapView() {
   const {
     selectedCamera,
     setSelectedCamera,
-    isSatellite,
     activeTool,
     drawShape,
     addMeasurePoint,
@@ -66,33 +66,31 @@ export function MapView() {
   );
   const [zoom, setZoom] = useState(11);
 
-  // Map Style selection
-  const mapStyle = isSatellite
-    ? {
-        version: 8 as const,
-        sources: {
-          "satellite-tiles": {
-            type: "raster" as const,
-            tiles: [
-              "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-            ],
-            tileSize: 256,
-            attribution: "Tiles &copy; Esri",
-          },
-        },
-        layers: [
-          {
-            id: "satellite",
-            type: "raster" as const,
-            source: "satellite-tiles",
-            minzoom: 0,
-            maxzoom: 20,
-          },
-        ],
-      }
-    : theme === "light"
-      ? "https://tiles.openfreemap.org/styles/positron"
-      : "https://tiles.openfreemap.org/styles/dark";
+  // Map Style selection & offline initialization
+  const isTest = import.meta.env.MODE === "test";
+  const [resolvedStyle, setResolvedStyle] = useState<any>(
+    isTest ? { version: 8, sources: {}, layers: [] } : null
+  );
+
+  useEffect(() => {
+    registerPMTilesProtocol();
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true;
+    fetchAndResolveStyle(theme)
+      .then((style) => {
+        if (isMounted) {
+          setResolvedStyle(style);
+        }
+      })
+      .catch((err) => {
+        console.error("Lỗi khi tải cấu hình bản đồ offline:", err);
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [theme]);
 
   // Update bounds on move/zoom
   const updateMapBounds = useCallback(() => {
@@ -222,21 +220,30 @@ export function MapView() {
 
   return (
     <div className="w-full h-full relative" data-testid="map-container">
-      <Map
-        {...viewport}
-        ref={mapRef}
-        onLoad={updateMapBounds}
-        onMove={(evt) => {
-          setViewport(evt.viewState);
-          updateMapBounds();
-        }}
-        onClick={handleMapClick}
-        mapLib={maplibregl}
-        mapStyle={mapStyle}
-        style={{ width: "100%", height: "100%" }}
-        minZoom={7}
-        maxZoom={18}
-      >
+      {!resolvedStyle ? (
+        <div className="w-full h-full flex items-center justify-center bg-background text-muted-foreground font-mono text-xs gap-2">
+          <div className="animate-spin rounded-full h-4 w-4 border-2 border-primary border-t-transparent"></div>
+          ĐANG KHỞI TẠO BẢN ĐỒ OFFLINE...
+        </div>
+      ) : (
+        <Map
+          {...viewport}
+          ref={mapRef}
+          onLoad={updateMapBounds}
+          onMove={(evt) => {
+            setViewport(evt.viewState);
+            updateMapBounds();
+          }}
+          onClick={handleMapClick}
+          mapLib={maplibregl}
+          mapStyle={resolvedStyle}
+          style={{ width: "100%", height: "100%" }}
+          minZoom={7}
+          maxZoom={18}
+          onError={(e) => {
+            console.error("[Map Error] Lỗi tải tài nguyên bản đồ offline:", e.error?.message || e);
+          }}
+        >
         {/* Navigation / Scale controls */}
         <NavigationControl position="top-left" showCompass />
         <ScaleControl position="bottom-left" />
@@ -325,6 +332,7 @@ export function MapView() {
           </Popup>
         )}
       </Map>
+      )}
 
       {/* Floating HUD Panels inside the Map */}
 

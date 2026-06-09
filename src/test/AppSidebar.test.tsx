@@ -38,8 +38,12 @@ vi.mock('@/components/ui/scroll-area', () => {
 // Mock Toggle with prop-forwarding support to fix aria-label queries
 vi.mock('@/components/ui/toggle', () => {
   return {
-    Toggle: ({ children, pressed, onPressedChange, ...props }: { children: React.ReactNode; pressed: boolean; onPressedChange: (val: boolean) => void } & Omit<React.ComponentPropsWithoutRef<'button'>, 'children' | 'onClick'>) => (
-      <button data-testid="toggle-button" onClick={() => onPressedChange(!pressed)} {...props}>
+    Toggle: ({ children, pressed, onPressedChange, ...props }: { children: React.ReactNode; pressed: boolean; onPressedChange?: (val: boolean) => void } & Omit<React.ComponentPropsWithoutRef<'button'>, 'children' | 'onClick'>) => (
+      <button 
+        data-testid="toggle-button" 
+        onClick={() => onPressedChange && onPressedChange(!pressed)} 
+        {...props}
+      >
         {children}
       </button>
     ),
@@ -99,15 +103,11 @@ describe('AppSidebar Component', () => {
     expect(screen.getByText('Danh Sách Camera')).toBeInTheDocument()
   })
 
-  it('toggles satellite style correctly in store', () => {
+  it('verifies that satellite style toggle is disabled in production offline mode', () => {
     render(<AppSidebar />)
     const toggleBtn = screen.getByLabelText('Toggle Satellite Style')
     expect(toggleBtn).toBeInTheDocument()
-
-    act(() => {
-      fireEvent.click(toggleBtn)
-    })
-    expect(useMapStore.getState().isSatellite).toBe(true)
+    expect(toggleBtn).toBeDisabled()
 
     act(() => {
       fireEvent.click(toggleBtn)

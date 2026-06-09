@@ -12,6 +12,12 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ["serving-starting-packets-lil.trycloudflare.com"],
+    // allowedHosts: ["quote-apartment-strengthen-internet.trycloudflare.com"],
+    proxy: {
+      "/map": {
+        target: "http://localhost:8080",
+        changeOrigin: true,
+      },
+    },
   },
 });
