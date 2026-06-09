@@ -25,3 +25,12 @@ dist-ssr
 
 # Coverage
 coverage/
+
+# Offline map assets (keep public/map/styles tracked)
+public/map/tiles/
+public/map/fonts/
+public/map/sprites/
+public/map/ne/
+
+# Temp folders
+.temp_pmtiles/
